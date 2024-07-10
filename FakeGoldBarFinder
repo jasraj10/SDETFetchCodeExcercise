@@ -1,0 +1,67 @@
+public class FakeGoldBarFinder {
+	public static void main(String[] args) {
+        // Simulate 9 gold bars with one fake bar (fake bar is lighter)
+        int[] goldBars = {10, 10, 10, 10, 10, 10, 10, 10, 9}; // Assuming the last bar is fake
+        
+        int fakeBarIndex = findFakeGoldBar(goldBars);
+        System.out.println("The fake gold bar is at index: " + fakeBarIndex);
+    }
+	public static int findFakeGoldBar(int[] goldBars) {
+        // Divide the bars into 3 groups of 3 bars each
+        int[] groupA = {goldBars[0], goldBars[1], goldBars[2]};
+        int[] groupB = {goldBars[3], goldBars[4], goldBars[5]};
+        int[] groupC = {goldBars[6], goldBars[7], goldBars[8]};
+        
+        // First weighing: compare Group A and Group B
+        int comparisonResult = compareGroups(groupA, groupB);
+        
+        if (comparisonResult == 0) {
+            // Group A equals Group B, the fake bar is in Group C
+            comparisonResult = compareGroups(new int[]{goldBars[6]}, new int[]{goldBars[7]});
+            if (comparisonResult == 0) {
+                return 8; // goldBars[8] is the fake bar
+            } else if (comparisonResult < 0) {
+                return 6; // goldBars[6] is the fake bar
+            } else {
+                return 7; // goldBars[7] is the fake bar
+            }
+        } else if (comparisonResult < 0) {
+            // Group A is lighter, the fake bar is in Group A
+            comparisonResult = compareGroups(new int[]{goldBars[0]}, new int[]{goldBars[1]});
+            if (comparisonResult == 0) {
+                return 2; // goldBars[2] is the fake bar
+            } else if (comparisonResult < 0) {
+                return 0; // goldBars[0] is the fake bar
+            } else {
+                return 1; // goldBars[1] is the fake bar
+            }
+        } else {
+            // Group B is lighter, the fake bar is in Group B
+            comparisonResult = compareGroups(new int[]{goldBars[3]}, new int[]{goldBars[4]});
+            if (comparisonResult == 0) {
+                return 5; // goldBars[5] is the fake bar
+            } else if (comparisonResult < 0) {
+                return 3; // goldBars[3] is the fake bar
+            } else {
+                return 4; // goldBars[4] is the fake bar
+            }
+        }
+    }
+
+    public static int compareGroups(int[] group1, int[] group2) {
+        int weightGroup1 = 0;
+        int weightGroup2 = 0;
+
+        for (int weight : group1) {
+            weightGroup1 += weight;
+        }
+
+        for (int weight : group2) {
+            weightGroup2 += weight;
+        }
+
+        return Integer.compare(weightGroup1, weightGroup2);
+    }
+}
+
+
